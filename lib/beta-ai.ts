@@ -9,7 +9,7 @@ export async function authorizeBetaAiRequest() {
     if (!allowance.allowed) {
       return {
         user: null,
-        response: Response.json({ error: `Daily beta limit reached (${allowance.limit} AI steps). Try again tomorrow.`, allowance }, { status: 429 }),
+        response: Response.json({ error: `Daily usage limit reached (${allowance.limit} AI steps). Try again tomorrow.`, allowance }, { status: 429 }),
       } as const;
     }
     return { user: auth.user, response: null, allowance } as const;
