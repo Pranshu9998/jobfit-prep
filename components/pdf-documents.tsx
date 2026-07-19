@@ -91,7 +91,7 @@ export function InterviewPrepPdfDocument({ pack, job, candidateName }: { pack: I
   </Document>;
 }
 
-function PrepCard({ title, items, tone }: { title: string; items: string[]; tone: object }) { return <View style={[prepStyles.card, tone]}><Text style={prepStyles.cardTitle}>{title}</Text>{(items.length ? items : ["No items detected"]).map(item => <ListItem key={item} text={item} />)}</View>; }
+function PrepCard({ title, items, tone }: { title: string; items: string[]; tone: typeof prepStyles.cardGreen | typeof prepStyles.cardAmber | typeof prepStyles.cardViolet }) { return <View style={[prepStyles.card, tone]}><Text style={prepStyles.cardTitle}>{title}</Text>{(items.length ? items : ["No items detected"]).map(item => <ListItem key={item} text={item} />)}</View>; }
 function ListItem({ text }: { text: string }) { return <View style={prepStyles.listRow}><Text style={prepStyles.listMark}>-</Text><Text style={prepStyles.listText}>{pdfText(text)}</Text></View>; }
 function PdfFooter({ label }: { label: string }) { return <View style={prepStyles.footer} fixed><Text>{label}</Text><Text render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} /></View>; }
 function groupResumeEntries(resume: TailoredResume) { const map = new Map<ResumeSection, TailoredResume["entries"]>(); for (const entry of resume.entries) map.set(entry.section, [...(map.get(entry.section) ?? []), entry]); return Array.from(map.entries()); }

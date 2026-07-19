@@ -1,17 +1,13 @@
-import { chatGPTSignInPath, getChatGPTUser, type ChatGPTUser } from "../app/chatgpt-auth";
+import { createSupabaseServerClient } from "./supabase/server";
 
-export type BetaUser = ChatGPTUser & { localDev: boolean };
+export type BetaUser = { id: string; displayName: string; email: string; fullName: string | null; localDev: false };
 
 export async function getBetaUser(): Promise<BetaUser | null> {
-  const user = await getChatGPTUser();
-  if (user) return { ...user, localDev: false };
-
-  const localEmail = process.env.LOCAL_DEV_USER_EMAIL?.trim();
-  if (process.env.NODE_ENV !== "production" && localEmail) {
-    const fullName = process.env.LOCAL_DEV_USER_NAME?.trim() || null;
-    return { email: localEmail, fullName, displayName: fullName || localEmail, localDev: true };
-  }
-  return null;
+  const supabase = await createSupabaseServerClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user?.email) return null;
+  const fullName = typeof user.user_metadata?.full_name === "string" ? user.user_metadata.full_name : null;
+  return { id: user.id, email: user.email, fullName, displayName: fullName || user.email, localDev: false };
 }
 
 export async function requireBetaApiUser() {
@@ -21,5 +17,5 @@ export async function requireBetaApiUser() {
 }
 
 export function betaSignInPath(returnTo = "/") {
-  return chatGPTSignInPath(returnTo);
+  return `/login?returnTo=${encodeURIComponent(returnTo)}`;
 }

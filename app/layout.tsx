@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Instrument_Serif } from "next/font/google";
-import { redirect } from "next/navigation";
-import { betaSignInPath, getBetaUser } from "../lib/beta-auth";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getBetaUser();
-  if (!user) redirect(betaSignInPath("/"));
   return <html lang="en"><body className={`${interfaceFont.variable} ${displayFont.variable} ${dataFont.variable}`}>{children}</body></html>;
 }

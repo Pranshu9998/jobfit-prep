@@ -8,7 +8,7 @@ export async function GET() {
   const auth = await requireBetaApiUser();
   if (!auth.user) return auth.response;
   try {
-    return Response.json({ document: await readWorkspace(auth.user.email) });
+    return Response.json({ document: await readWorkspace(auth.user) });
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : "The workspace could not be loaded." }, { status: 503 });
   }
@@ -32,7 +32,7 @@ export async function DELETE() {
   const auth = await requireBetaApiUser();
   if (!auth.user) return auth.response;
   try {
-    await deleteWorkspace(auth.user.email);
+    await deleteWorkspace(auth.user);
     return Response.json({ deleted: true });
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : "The workspace could not be deleted." }, { status: 503 });
